@@ -46,11 +46,12 @@ $.loader (
             dep: []
           }
         ],
-  // Add array with CSS file list to be loaded. Structure must has 'name' and 'src' informations.
+  // Add array with CSS file list to be loaded. Structure must has 'name', 'src' and 'dep' informations.
   'css': [
            {
              name: 'main-css',
-             src: 'css/main-css.css'
+             src: 'css/main-css.css',
+             dep: []
            }
          ],
   // Should permit or not the use of cache. If false, will be added ?_(TIMESTAMP NUMBER) to URL, to avoid browser cache.
@@ -83,6 +84,15 @@ Dependencies
 History
 -------
 This plugin was created when I need to create a system with modular support and that need to load JavaScript code with dependencies to correct load order.
+
+v1.0 - Released Nov/04/2013:
+* First release.
+
+v1.1 - Released Apr/15/2015:
+* Fixed IE7, IE8 and IE9 CSS injection;
+* Added support to dependencies into CSS;
+* Added ID tag to JavaScripts;
+* Added ID and Class tags to CSSs.
 
 License
 -------
