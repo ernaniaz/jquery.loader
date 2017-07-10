@@ -94,6 +94,11 @@ v1.1 - Released Apr/15/2015:
 * Added ID tag to JavaScripts;
 * Added ID and Class tags to CSSs.
 
+v1.2 - Released Oct/27/2015:
+* Added script sourceURL to JavaScripts (firebug debug facility).
+
+Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
+
 License
 -------
 MIT License.
