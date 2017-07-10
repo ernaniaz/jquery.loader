@@ -1,13 +1,26 @@
 /**
- *      jQuery Loader Plugin v1.0
+ *      jQuery Loader Plugin v1.1
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.0
+ * @version     1.1
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
+ */
+
+/**
+ * History:
+ *
+ * v1.0 - Released Nov/04/2013:
+ * - First release
+ *
+ * v1.1 - Released Apr/15/2015:
+ * - Fixed IE7, IE8 and IE9 CSS injection
+ * - Added support to dependencies into CSS
+ * - Added ID tag to JavaScripts
+ * - Added ID and Class tags to CSSs
  */
 
 ;( function ( $)
@@ -53,18 +66,18 @@
     // Add javascript scripts to process list:
     for ( i in options.js)
     {
-      if ( typeof $.loader.data[( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] === 'undefined')
+      if ( typeof $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] === 'undefined')
       {
-        $.loader.data[( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'dep': ( options.js[i].dep || [])};
+        $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'dep': ( options.js[i].dep || []), 'id': ( typeof ( options.js[i].id) == 'string' ? options.js[i].id : '')};
       }
     }
 
     // Add css styles to process list:
     for ( i in options.css)
     {
-      if ( typeof $.loader.data[( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] === 'undefined')
+      if ( typeof $.loader.data['css-' + ( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] === 'undefined')
       {
-        $.loader.data[( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] = { 'type': 'css', 'status': 'unloaded', 'loaded': false, 'src': options.css[i].src, 'cache': ( typeof ( options.css[i].cache) == 'boolean' ? options.css[i].cache : options.cache), 'media': ( typeof ( options.css[i].media) == 'string' ? options.css[i].media : 'screen, projection')};
+        $.loader.data['css-' + ( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] = { 'type': 'css', 'status': 'unloaded', 'loaded': false, 'src': options.css[i].src, 'cache': ( typeof ( options.css[i].cache) == 'boolean' ? options.css[i].cache : options.cache), 'media': ( typeof ( options.css[i].media) == 'string' ? options.css[i].media : 'screen, projection'), 'dep': ( options.css[i].dep || []), 'id': ( typeof ( options.css[i].id) == 'string' ? options.css[i].id : ''), 'class': ( typeof ( options.css[i].class) == 'string' ? options.css[i].class : '')};
       }
     };
 
@@ -90,23 +103,20 @@
       // If not loaded, check and process it:
       if ( $.loader.data[i].loaded == false)
       {
-        if ( $.loader.data[i].type == 'js')
+        var deps = true;
+        for ( j in $.loader.data[i].dep)
         {
-          var deps = true;
-          for ( j in $.loader.data[i].dep)
+          if ( $.loader.data[$.loader.data[i].type + '-' + $.loader.data[i].dep[j]].status != 'loaded')
           {
-            if ( $.loader.data[$.loader.data[i].dep[j]].status != 'loaded')
-            {
-              deps = false;
-            }
+            deps = false;
           }
-          if ( deps && $.loader.data[i].status == 'unloaded')
+        }
+        if ( deps && $.loader.data[i].status == 'unloaded')
+        {
+          if ( $.loader.data[i].type == 'js')
           {
             $.loader.loadjs ( i);
-          }
-        } else {
-          if ( $.loader.data[i].status == 'unloaded')
-          {
+          } else {
             $.loader.loadcss ( i);
           }
         }
@@ -154,6 +164,8 @@
                  }
                }
                $.loader.data[name].status = 'failed: ' + textStatus;
+               console.log ( 'Loader error on ' + name + ' <' + $.loader.data[name].src + '>: ' + textStatus);
+               console.log ( errorThrown);
                $.loader.onupdate ( name);
                $.loader.refresh ();
              }
@@ -176,7 +188,21 @@
       cache: $.loader.data[name].cache,
       success: function ( script, textStatus)
                {
-                 $('<link>').attr ( 'rel', 'stylesheet').attr ( 'type', 'text/css').attr ( 'media', $.loader.data[name].media).attr ( 'href', $.loader.data[name].src).appendTo ( 'head');
+                 if ( document.createStyleSheet)
+                 {
+                   iecss = document.createStyleSheet ( $.loader.data[name].src);
+                   iecss.media = $.loader.data[name].media;
+                   if ( $.loader.data[name].id != '')
+                   {
+                     iecss.id = $.loader.data[name].id;
+                   }
+                   if ( $.loader.data[name].class != '')
+                   {
+                     iecss.class = $.loader.data[name].class;
+                   }
+                 } else {
+                   $('<link rel="stylesheet" type="text/css" media="' + $.loader.data[name].media + '" href="' + $.loader.data[name].src + '"' + ( $.loader.data[name].id != '' ? ' id="' + $.loader.data[name].id + '"' : '') + ( $.loader.data[name].class != '' ? ' class="' + $.loader.data[name].class + '"' : '') + ' />').appendTo ( 'head');
+                 }
                  $.loader.data[name].status = 'loaded';
                  $.loader.onupdate ( name);
                  $.loader.refresh ();
