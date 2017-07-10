@@ -1,10 +1,10 @@
 /**
- *      jQuery Loader Plugin v1.1
+ *      jQuery Loader Plugin v1.2
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.1
+ * @version     1.2
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -21,6 +21,9 @@
  * - Added support to dependencies into CSS
  * - Added ID tag to JavaScripts
  * - Added ID and Class tags to CSSs
+ *
+ * v1.2 - Released Oct/27/2015:
+ * - Added script sourceURL to JavaScripts (firebug debug facility)
  */
 
 ;( function ( $)
@@ -142,6 +145,10 @@
       type: 'GET',
       url: $.loader.data[name].src,
       dataType: 'script',
+      dataFilter: function ( data, type)
+                  {
+                    return '//# sourceURL=' + $.loader.data[name].src + '\n' + data;
+                  },
       timeout: $.loader.timeout,
       tryCount: 0,
       retryLimit: $.loader.retryLimit,
