@@ -6,8 +6,6 @@ jquery.loader
 This is a simple plugin that load CSS and JavaScript files into page, with dependencies and progress informations.
 It's usefull to modern web based systems that didn't reload the page, and load all the required libraries at first page access.
 
-You can access the demo at https://ernaniaz.github.io/jquery.loader/demo.html.
-
 Features
 --------
 * Allow code dependency load;
@@ -76,7 +74,22 @@ $.loader (
   'onfinish': function ( total)
               {
                 $('.application').trigger ( 'start');
-              }
+              },
+  // Callback function to be executed if there's any dependency error at load. Added in version 1.3.
+  'onloadfail': function ( error)
+                {
+                  console.warn ( error);
+                },
+  // Callback function to be executed everytime a script is loaded successfully. Added in version 1.3.
+  'onsuccess': function ( name)
+               {
+                 console.log ( 'Script ' + name + ' loaded.');
+               },
+  // Callback function to be executed everytime a script fail to load. Added in version 1.3.
+  'onfail': function ( name)
+            {
+              console.error ( 'Script ' + name + ' FAILED to load!');
+            }
 });
 ```
 Dependencies
@@ -98,6 +111,15 @@ v1.1 - Released Apr/15/2015:
 
 v1.2 - Released Oct/27/2015:
 * Added script sourceURL to JavaScripts (firebug debug facility).
+
+v1.3 - Released Jul/11/2017:
+* Added dependency check when loading;
+* Added onloadfail callback to trigger when something wrong happens at start;
+* Added onsuccess callback to trigger when a script is loaded correctly;
+* Added onfail callback to trigger when a script fail to load.
+
+v1.4 - Released Jul/18/2017:
+* Changed way we load JavaScript files, due to Firefox limitations on debug.
 
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
