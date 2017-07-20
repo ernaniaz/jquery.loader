@@ -19,77 +19,77 @@ Basic Usage
 $.loader (
 {
   // Add array with JavaScript file list to be loaded. Structure must has 'name', 'src' and 'dep' informations.
-  'js': [
-          {
-            name: 'main-javascript',
-            src: 'js/main-javascript.js',
-            dep: [
-                   'submodule-1',
-                   'submodule-2'
-                 ]
-          },
-          {
-            name: 'submodule-1',
-            src: 'js/submodule1.js',
-            dep: [
-                   'submodule-3'
-                 ]
-          },
-          {
-            name: 'submodule-2',
-            src: 'js/submodule2.js',
-            dep: []
-          },
-          {
-            name: 'submodule-3',
-            src: 'js/submodule3.js',
-            dep: []
-          }
-        ],
+  js: [
+        {
+          name: 'main-javascript',
+          src: 'js/main-javascript.js',
+          dep: [
+                 'submodule-1',
+                 'submodule-2'
+               ]
+        },
+        {
+          name: 'submodule-1',
+          src: 'js/submodule1.js',
+          dep: [
+                 'submodule-3'
+               ]
+        },
+        {
+          name: 'submodule-2',
+          src: 'js/submodule2.js',
+          dep: []
+        },
+        {
+          name: 'submodule-3',
+          src: 'js/submodule3.js',
+          dep: []
+        }
+      ],
   // Add array with CSS file list to be loaded. Structure must has 'name', 'src' and 'dep' informations.
-  'css': [
-           {
-             name: 'main-css',
-             src: 'css/main-css.css',
-             dep: []
-           }
-         ],
+  css: [
+         {
+           name: 'main-css',
+           src: 'css/main-css.css',
+           dep: []
+         }
+       ],
   // Should permit or not the use of cache. If false, will be added ?_(TIMESTAMP NUMBER) to URL, to avoid browser cache.
-  'cache': false,
+  cache: false,
   // Number of retries in case of failure. 0 will disable retry.
-  'retryLimit': 3,
+  retryLimit: 3,
   // Timeout in miliseconds to wait for script load. 0 will disable timeout.
-  'timeout': 0,
+  timeout: 0,
   // Callback function to be executed every time a script is loaded or failed to be loaded. Parameters will be the name of the script.
-  'onupdate': function ( script)
-              {
-                console.log ( 'onupdate fired to script ' + script);
-              },
-  // Callback function to be executed every time a script is loaded. Parameters will be the number of loaded files, total of files and percentage loaded.
-  'onrefresh': function ( loaded, total, percentage)
-               {
-                 $('.percentage').animate ( { width: percentage + '%'}, 50);
-               },
-  // Callback function to be executed when 100% of files was loaded. Parameter will be the total of files loaded.
-  'onfinish': function ( total)
-              {
-                $('.application').trigger ( 'start');
-              },
-  // Callback function to be executed if there's any dependency error at load. Added in version 1.3.
-  'onloadfail': function ( error)
-                {
-                  console.warn ( error);
-                },
-  // Callback function to be executed everytime a script is loaded successfully. Added in version 1.3.
-  'onsuccess': function ( name)
-               {
-                 console.log ( 'Script ' + name + ' loaded.');
-               },
-  // Callback function to be executed everytime a script fail to load. Added in version 1.3.
-  'onfail': function ( name)
+  onupdate: function ( script)
             {
-              console.error ( 'Script ' + name + ' FAILED to load!');
-            }
+              console.log ( 'onupdate fired to script ' + script);
+            },
+  // Callback function to be executed every time a script is loaded. Parameters will be the number of loaded files, total of files and percentage loaded.
+  onrefresh: function ( loaded, total, percentage)
+             {
+               $('.percentage').animate ( { width: percentage + '%'}, 50);
+             },
+  // Callback function to be executed when 100% of files was loaded. Parameter will be the total of files loaded.
+  onfinish: function ( total)
+            {
+              $('.application').trigger ( 'start');
+            },
+  // Callback function to be executed if there's any dependency error at load. Added in version 1.3.
+  onloadfail: function ( error)
+              {
+                console.warn ( error);
+              },
+  // Callback function to be executed everytime a script is loaded successfully. Added in version 1.3.
+  onsuccess: function ( name)
+             {
+               console.log ( 'Script ' + name + ' loaded.');
+             },
+  // Callback function to be executed everytime a script fail to load. Added in version 1.3.
+  onfail: function ( name)
+          {
+            console.error ( 'Script ' + name + ' FAILED to load!');
+          }
 });
 ```
 Dependencies
@@ -120,6 +120,9 @@ v1.3 - Released Jul/11/2017:
 
 v1.4 - Released Jul/18/2017:
 * Changed way we load JavaScript files, due to Firefox limitations on debug.
+
+v1.4.1 - Released Jul/20/2017:
+* Fixed message on error.
 
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
