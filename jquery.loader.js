@@ -1,10 +1,10 @@
 /**
- *      jQuery Loader Plugin v1.4
+ *      jQuery Loader Plugin v1.4.1
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.4
+ * @version     1.4.1
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -34,6 +34,9 @@
  *
  * v1.4 - Released Jul/18/2017:
  * - Changed way we load JavaScript files, due to Firefox limitations on debug
+ *
+ * v1.4.1 - Released Jul/20/2017:
+ * - Fixed message on error
  */
 
 ;( function ( $)
@@ -262,8 +265,8 @@
                      {
                        if ( $.loader.data[name].status == 'loading')
                        {
-                         $.loader.data[name].status = 'failed' + ( textStatus != '' ? ': ' + textStatus : '');
-                         console.log ( 'Loader error on ' + name + ' <' + $.loader.data[name].src + '>' + ( textStatus != '' ? ': ' + textStatus : ''));
+                         $.loader.data[name].status = 'failed' + ( typeof textStatus == 'string' && textStatus != '' ? ': ' + textStatus : '');
+                         console.log ( 'Loader error on ' + name + ' <' + $.loader.data[name].src + '>' + ( typeof textStatus == 'string' && textStatus != '' ? ': ' + textStatus : ''));
                          $.loader.onfail ( name);
                          $.loader.onupdate ( name);
                          $.loader.refresh ();
