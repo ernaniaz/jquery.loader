@@ -6,6 +6,8 @@ jquery.loader
 This is a simple plugin that load CSS and JavaScript files into page, with dependencies and progress informations.
 It's usefull to modern web based systems that didn't reload the page, and load all the required libraries at first page access.
 
+You can access the demo at https://ernaniaz.github.io/jquery.loader/demo.html.
+
 Features
 --------
 * Allow code dependency load;
