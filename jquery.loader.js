@@ -1,10 +1,10 @@
 /**
- *      jQuery Loader Plugin v1.4.1
+ *       jQuery Loader Plugin v1.5
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.4.1
+ * @version     1.5
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -37,6 +37,9 @@
  *
  * v1.4.1 - Released Jul/20/2017:
  * - Fixed message on error
+ *
+ * v1.5 - Released Feb/04/2019:
+ * - Added onload parameter to javascript files
  */
 
 ;( function ( $)
@@ -97,7 +100,7 @@
     {
       if ( typeof $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] === 'undefined')
       {
-        $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'dep': ( options.js[i].dep || []), 'id': ( typeof ( options.js[i].id) == 'string' ? options.js[i].id : '')};
+        $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'onload': ( typeof ( options.js[i].onload) == 'function' ? options.js[i].onload : function () {}), 'dep': ( options.js[i].dep || []), 'id': ( typeof ( options.js[i].id) == 'string' ? options.js[i].id : '')};
         if ( typeof ( options.js[i].dep) == 'object')
         {
           for ( x in options.js[i].dep)
@@ -234,6 +237,7 @@
                       if ( $.loader.data[name].status == 'loading')
                       {
                         $.loader.data[name].status = 'loaded';
+                        $.loader.data[name].onload ();
                         $.loader.onsuccess ( name);
                         $.loader.onupdate ( name);
                         $.loader.refresh ();
