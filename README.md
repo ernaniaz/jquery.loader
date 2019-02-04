@@ -126,6 +126,9 @@ v1.4 - Released Jul/18/2017:
 v1.4.1 - Released Jul/20/2017:
 * Fixed message on error.
 
+v1.5 - Released Feb/04/2019:
+* Added onload parameter to javascript files.
+
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
 License
