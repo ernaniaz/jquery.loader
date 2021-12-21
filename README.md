@@ -129,6 +129,9 @@ v1.4.1 - Released Jul/20/2017:
 v1.5 - Released Feb/04/2019:
 * Added onload parameter to javascript files.
 
+v1.6 - Released Dec/21/2021:
+* Added loaded sequence order debugging feature.
+
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
 License

@@ -4,7 +4,7 @@
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.5
+ * @version     1.6
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -40,6 +40,9 @@
  *
  * v1.5 - Released Feb/04/2019:
  * - Added onload parameter to javascript files
+ *
+ * v1.6 - Released Dec/21/2021:
+ * - Added loaded sequence order debugging feature
  */
 
 ;( function ( $)
@@ -148,6 +151,10 @@
       }
     }
 
+    // Clear load order list:
+    $.loader.order.js = [];
+    $.loader.order.css = [];
+
     // Initialize and load using the refresh() method:
     $.loader.refresh ();
   };
@@ -236,6 +243,7 @@
                     {
                       if ( $.loader.data[name].status == 'loading')
                       {
+                        $.loader.order.js.push ( name);
                         $.loader.data[name].status = 'loaded';
                         $.loader.data[name].onload ();
                         $.loader.onsuccess ( name);
@@ -313,6 +321,7 @@
                    $('<link rel="stylesheet" type="text/css" media="' + $.loader.data[name].media + '" href="' + $.loader.data[name].src + '"' + ( $.loader.data[name].id != '' ? ' id="' + $.loader.data[name].id + '"' : '') + ( $.loader.data[name].class != '' ? ' class="' + $.loader.data[name].class + '"' : '') + ' />').appendTo ( 'head');
                  }
                  $.loader.data[name].status = 'loaded';
+                 $.loader.order.css.push ( name);
                  $.loader.onsuccess ( name);
                  $.loader.onupdate ( name);
                  $.loader.refresh ();
@@ -347,4 +356,7 @@
   $.loader.onloadfail = function () {};
   $.loader.onfail = function () {};
   $.loader.onsuccess = function () {};
+  $.loader.order = new Object ();
+  $.loader.order.js = [];
+  $.loader.order.css = [];
 })(jQuery);
