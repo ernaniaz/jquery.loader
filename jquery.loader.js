@@ -1,10 +1,10 @@
 /**
- *       jQuery Loader Plugin v1.5
+ *       jQuery Loader Plugin v1.7
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.6
+ * @version     1.7
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -43,6 +43,9 @@
  *
  * v1.6 - Released Dec/21/2021:
  * - Added loaded sequence order debugging feature
+ *
+ * v1.7 - Released Feb/16/2024:
+ * - Added nonce variable (to be used with CSP pages)
  */
 
 ;( function ( $)
@@ -63,6 +66,10 @@
     if ( typeof ( options.cache) == 'boolean')
     {
       $.loader.cache = options.cache;
+    }
+    if ( typeof ( options.nonce) == 'string')
+    {
+      $.loader.nonce = options.nonce;
     }
     if ( typeof ( options.retryLimit) == 'integer')
     {
@@ -286,6 +293,15 @@
                      };
     script.src = $.loader.data[name].src + ( $.loader.data[name].cache == true ? '?_=' + new Date ().getTime () : '');
     script.id = name;
+    if ( $.loader.data[name].nonce)
+    {
+      script.nonce = $.loader.nonce;
+    } else {
+      if ( $.loader.nonce)
+      {
+        script.nonce = $.loader.nonce;
+      }
+    }
     document.body.appendChild ( script);
   };
 
@@ -317,8 +333,17 @@
                    {
                      iecss.class = $.loader.data[name].class;
                    }
+                   if ( $.loader.data[name].nonce)
+                   {
+                     iecss.nonce = $.loader.data[name].nonce;
+                   } else {
+                     if ( $.loader.nonce)
+                     {
+                       iecss.nonce = $.loader.nonce;
+                     }
+                   }
                  } else {
-                   $('<link rel="stylesheet" type="text/css" media="' + $.loader.data[name].media + '" href="' + $.loader.data[name].src + '"' + ( $.loader.data[name].id != '' ? ' id="' + $.loader.data[name].id + '"' : '') + ( $.loader.data[name].class != '' ? ' class="' + $.loader.data[name].class + '"' : '') + ' />').appendTo ( 'head');
+                   $('<link rel="stylesheet" type="text/css" media="' + $.loader.data[name].media + '" href="' + $.loader.data[name].src + '"' + ( $.loader.data[name].id != '' ? ' id="' + $.loader.data[name].id + '"' : '') + ( $.loader.data[name].class != '' ? ' class="' + $.loader.data[name].class + '"' : '') + ( $.loader.data[name].nonce != '' ? ' nonce="' + $.loader.data[name].nonce + '"' : '') + ( $.loader.data[name].nonce == '' && $.loader.nonce != '' ? ' nonce="' + $.loader.nonce + '"' : '') + ' />').appendTo ( 'head');
                  }
                  $.loader.data[name].status = 'loaded';
                  $.loader.order.css.push ( name);

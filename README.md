@@ -20,7 +20,7 @@ Basic Usage
 ```javascript
 $.loader (
 {
-  // Add array with JavaScript file list to be loaded. Structure must has 'name', 'src' and 'dep' informations.
+  // Add array with JavaScript file list to be loaded. Structure must has 'name', 'src' and 'dep' informations. Optional attribute 'nonce' could be used.
   js: [
         {
           name: 'main-javascript',
@@ -56,6 +56,8 @@ $.loader (
            dep: []
          }
        ],
+  // Nonce value (to be used with CSP) to be used in all objects (if an object has a nonce, it will superseed global nonce). Default is empty (doesn't add the variable).
+  nonce: '',
   // Should permit or not the use of cache. If false, will be added ?_(TIMESTAMP NUMBER) to URL, to avoid browser cache.
   cache: false,
   // Number of retries in case of failure. 0 will disable retry.
@@ -131,6 +133,9 @@ v1.5 - Released Feb/04/2019:
 
 v1.6 - Released Dec/21/2021:
 * Added loaded sequence order debugging feature.
+
+v1.7 - Released Feb/16/2024:
+* Added nonce variable (to be used with CSP pages)
 
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
