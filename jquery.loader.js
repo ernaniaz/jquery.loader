@@ -1,10 +1,10 @@
 /**
- *       jQuery Loader Plugin v1.7
+ *       jQuery Loader Plugin v1.8
  * by Ernani Azevedo <ernaniaz@gmail.com>
  *
  * @name        jQuery Loader
  * @description Loader is a jQuery plugin that loads JS and CSS with dependencies.
- * @version     1.7
+ * @version     1.8
  * @requires    jQuery 1.8.0 or newer (not testes with older versions, probably works)
  * @author      Ernani Azevedo <ernaniaz@gmail.com>
  * @license     MIT
@@ -46,6 +46,10 @@
  *
  * v1.7 - Released Feb/16/2024:
  * - Added nonce variable (to be used with CSP pages)
+ *
+ * v1.8 - Released Feb/20/2024:
+ * - Added weight variable. Now you can set a weight for progress on each object
+ * - Added JavaScript content type. This will be useful to load "modules"
  */
 
 ;( function ( $)
@@ -110,7 +114,7 @@
     {
       if ( typeof $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] === 'undefined')
       {
-        $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'onload': ( typeof ( options.js[i].onload) == 'function' ? options.js[i].onload : function () {}), 'dep': ( options.js[i].dep || []), 'id': ( typeof ( options.js[i].id) == 'string' ? options.js[i].id : '')};
+        $.loader.data['js-' + ( typeof ( options.js[i].name) == 'string' ? options.js[i].name : options.js[i].src)] = { 'type': 'js', 'content': ( typeof ( options.js[i].type) == 'string' ? options.js[i].type : 'text/javascript'), 'weight': ( typeof ( options.js[i].weight) == 'number' ? options.js[i].weight : 1), 'status': 'unloaded', 'loaded': false, 'src': options.js[i].src, 'cache': ( typeof ( options.js[i].cache) == 'boolean' ? options.js[i].cache : options.cache), 'onload': ( typeof ( options.js[i].onload) == 'function' ? options.js[i].onload : function () {}), 'dep': ( options.js[i].dep || []), 'id': ( typeof ( options.js[i].id) == 'string' ? options.js[i].id : '')};
         if ( typeof ( options.js[i].dep) == 'object')
         {
           for ( x in options.js[i].dep)
@@ -137,7 +141,7 @@
     {
       if ( typeof $.loader.data['css-' + ( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] === 'undefined')
       {
-        $.loader.data['css-' + ( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] = { 'type': 'css', 'status': 'unloaded', 'loaded': false, 'src': options.css[i].src, 'cache': ( typeof ( options.css[i].cache) == 'boolean' ? options.css[i].cache : options.cache), 'media': ( typeof ( options.css[i].media) == 'string' ? options.css[i].media : 'screen, projection'), 'dep': ( options.css[i].dep || []), 'id': ( typeof ( options.css[i].id) == 'string' ? options.css[i].id : ''), 'class': ( typeof ( options.css[i].class) == 'string' ? options.css[i].class : '')};
+        $.loader.data['css-' + ( typeof ( options.css[i].name) == 'string' ? options.css[i].name : options.css[i].src)] = { 'type': 'css', 'weight': ( typeof ( options.css[i].weight) == 'number' ? options.css[i].weight : 1), 'status': 'unloaded', 'loaded': false, 'src': options.css[i].src, 'cache': ( typeof ( options.css[i].cache) == 'boolean' ? options.css[i].cache : options.cache), 'media': ( typeof ( options.css[i].media) == 'string' ? options.css[i].media : 'screen, projection'), 'dep': ( options.css[i].dep || []), 'id': ( typeof ( options.css[i].id) == 'string' ? options.css[i].id : ''), 'class': ( typeof ( options.css[i].class) == 'string' ? options.css[i].class : '')};
         if ( typeof ( options.css[i].dep) == 'object')
         {
           for ( x in options.css[i].dep)
@@ -172,14 +176,18 @@
     // Check every entry for dependencies:
     var loaded = 0;
     var total = 0;
+    var totalweight = 0;
+    var loadedweight = 0;
     for ( i in $.loader.data)
     {
       // Get total of loaded and unloaded scripts:
       if ( $.loader.data[i].status == 'loaded' || $.loader.data[i].status.substring ( 0, 6) == 'failed')
       {
         loaded++;
+        loadedweight += $.loader.data[i].weight;
       }
       total++;
+      totalweight += $.loader.data[i].weight;
 
       // If not loaded, check and process it:
       if ( $.loader.data[i].loaded == false)
@@ -227,7 +235,7 @@
     }
 
     // Call client refresh() event:
-    $.loader.onrefresh ( loaded, total, ( loaded * 100) / total);
+    $.loader.onrefresh ( loaded, total, ( loadedweight * 100) / totalweight);
 
     if ( loaded == total)
     {
@@ -291,6 +299,7 @@
                          $.loader.refresh ();
                        }
                      };
+    script.type = $.loader.data[name].content;
     script.src = $.loader.data[name].src + ( $.loader.data[name].cache == true ? '?_=' + new Date ().getTime () : '');
     script.id = name;
     if ( $.loader.data[name].nonce)

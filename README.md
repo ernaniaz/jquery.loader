@@ -137,6 +137,10 @@ v1.6 - Released Dec/21/2021:
 v1.7 - Released Feb/16/2024:
 * Added nonce variable (to be used with CSP pages)
 
+v1.8 - Released Feb/20/2024:
+- Added weight variable. Now you can set a weight for progress on each object
+- Added JavaScript content type. This will be useful to load "modules"
+
 Note: The release date was original date I wrote and versioned this script. I just published it now with MIT license!
 
 License
